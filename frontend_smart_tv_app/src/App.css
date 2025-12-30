@@ -3,102 +3,178 @@
   /* Light theme colors */
   --bg-primary: #ffffff;
   --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
+  --text-primary: #111827;
+  --text-secondary: rgba(17, 24, 39, 0.7);
+  --border-color: rgba(17, 24, 39, 0.12);
+  --button-bg: #3b82f6;
   --button-text: #ffffff;
+
+  --focus: #06b6d4;
+  --tile-bg: rgba(0, 0, 0, 0.04);
 }
 
-[data-theme="dark"] {
+[data-theme='dark'] {
   /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
+  --bg-primary: #0b1220;
+  --bg-secondary: #111827;
   --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --border-color: rgba(255, 255, 255, 0.12);
+  --button-bg: #3b82f6;
   --button-text: #ffffff;
+
+  --focus: #06b6d4;
+  --tile-bg: rgba(255, 255, 255, 0.06);
 }
 
 .App {
-  text-align: center;
-  background-color: var(--bg-primary);
+  min-height: 100vh;
+  background: radial-gradient(
+      1200px 800px at 20% 0%,
+      rgba(59, 130, 246, 0.12),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 600px at 85% 10%,
+      rgba(6, 182, 212, 0.12),
+      transparent 50%
+    ),
+    var(--bg-primary);
   color: var(--text-primary);
-  min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
+.tvHeader {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 24px;
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.App-link {
+.tvBrand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.tvLogo {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 1), rgba(6, 182, 212, 1));
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.tvBrandText {
+  min-width: 0;
+}
+
+.tvTitle {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.tvSubtitle {
+  font-size: 13px;
   color: var(--text-secondary);
-  transition: color 0.3s ease;
+  margin-top: 2px;
+}
+
+.tvHeaderRight {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.tvHint {
+  font-size: 12px;
+  color: var(--text-secondary);
 }
 
 .theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
   background-color: var(--button-bg);
   color: var(--button-text);
   border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  opacity: 0.9;
+.theme-toggle:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
 }
 
-.theme-toggle:active {
-  transform: translateY(0);
+.tvMain {
+  padding: 22px 24px 28px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.tvSectionTitle {
+  margin: 0 0 14px;
+  font-size: 16px;
+  letter-spacing: 0.2px;
 }
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
+.tvGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.tvTile {
+  text-align: left;
+  border: 1px solid var(--border-color);
+  background: var(--tile-bg);
+  color: inherit;
+  border-radius: 14px;
+  padding: 16px;
+  cursor: pointer;
+  min-height: 96px;
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease,
+    background 120ms ease;
+}
+
+.tvTile:hover {
+  transform: translateY(-1px);
+}
+
+.tvTile:focus {
+  outline: none;
+}
+
+.tvTile--focused {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25);
+  transform: translateY(-1px);
+}
+
+.tvTileTitle {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+}
+
+.tvTileSubtitle {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.tvFooterNote {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* Small screens fallback (preview/dev) */
+@media (max-width: 900px) {
+  .tvGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
