@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './App.css';
+import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom';
+import VodPage from './pages/VodPage';
 
 type Theme = 'light' | 'dark';
 
@@ -7,25 +9,27 @@ type Tile = {
   id: string;
   title: string;
   subtitle: string;
+  route?: string;
 };
 
 const GRID_COLS = 4;
 
-// PUBLIC_INTERFACE
-function App() {
+function AppShell() {
+  const navigate = useNavigate();
+
   const [theme, setTheme] = useState<Theme>('light');
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
 
   const tiles: Tile[] = useMemo(
     () => [
       { id: 'epg', title: 'EPG', subtitle: 'Program guide' },
-      { id: 'vod', title: 'VOD', subtitle: 'Movies & series' },
+      { id: 'vod', title: 'VOD', subtitle: 'Movies & series', route: '/vod' },
       { id: 'live', title: 'Live', subtitle: 'Watch now' },
       { id: 'recordings', title: 'Recordings', subtitle: 'Your saved shows' },
       { id: 'search', title: 'Search', subtitle: 'Find content' },
       { id: 'profiles', title: 'Profiles', subtitle: 'Switch user' },
       { id: 'settings', title: 'Settings', subtitle: 'Preferences' },
-      { id: 'help', title: 'Help', subtitle: 'Support' }
+      { id: 'help', title: 'Help', subtitle: 'Support' },
     ],
     [],
   );
@@ -42,6 +46,10 @@ function App() {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
+      // Home grid navigation only; the VOD page has its own handlers.
+      // If we're not on "/" we do nothing here.
+      if (window.location.pathname !== '/') return;
+
       switch (e.key) {
         case 'ArrowLeft':
           e.preventDefault();
@@ -59,11 +67,17 @@ function App() {
           e.preventDefault();
           setFocusedIndex((idx) => Math.min(tiles.length - 1, idx + GRID_COLS));
           break;
-        case 'Enter':
+        case 'Enter': {
           e.preventDefault();
+          const selected = tiles[focusedIndex];
+          if (selected?.route) {
+            navigate(selected.route);
+            return;
+          }
           // eslint-disable-next-line no-alert
-          alert(`Selected: ${tiles[focusedIndex]?.title ?? 'Unknown'}`);
+          alert(`Selected: ${selected?.title ?? 'Unknown'}`);
           break;
+        }
         default:
           break;
       }
@@ -71,12 +85,50 @@ function App() {
 
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [focusedIndex, tiles]);
+  }, [focusedIndex, navigate, tiles]);
 
   // PUBLIC_INTERFACE
   const toggleTheme = () => {
     setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
+
+  const Home = (
+    <main className="tvMain">
+      <section className="tvSection" aria-label="Main menu">
+        <h2 className="tvSectionTitle">Sections</h2>
+
+        <div className="tvGrid" role="grid" aria-label="Navigation grid">
+          {tiles.map((t, idx) => {
+            const isFocused = idx === focusedIndex;
+
+            return (
+              <button
+                key={t.id}
+                ref={(el) => {
+                  tileRefs.current[idx] = el;
+                }}
+                className={`tvTile ${isFocused ? 'tvTile--focused' : ''}`}
+                type="button"
+                role="gridcell"
+                tabIndex={idx === focusedIndex ? 0 : -1}
+                onFocus={() => setFocusedIndex(idx)}
+                onClick={() => {
+                  if (t.route) navigate(t.route);
+                }}
+              >
+                <div className="tvTileTitle">{t.title}</div>
+                <div className="tvTileSubtitle">{t.subtitle}</div>
+              </button>
+            );
+          })}
+        </div>
+
+        <p className="tvFooterNote">
+          Use Arrow keys + Enter. VOD is now a real routed page with a carousel.
+        </p>
+      </section>
+    </main>
+  );
 
   return (
     <div className="App">
@@ -104,39 +156,29 @@ function App() {
         </div>
       </header>
 
-      <main className="tvMain">
-        <section className="tvSection" aria-label="Main menu">
-          <h2 className="tvSectionTitle">Sections</h2>
-
-          <div className="tvGrid" role="grid" aria-label="Navigation grid">
-            {tiles.map((t, idx) => {
-              const isFocused = idx === focusedIndex;
-
-              return (
-                <button
-                  key={t.id}
-                  ref={(el) => {
-                    tileRefs.current[idx] = el;
-                  }}
-                  className={`tvTile ${isFocused ? 'tvTile--focused' : ''}`}
-                  type="button"
-                  role="gridcell"
-                  tabIndex={idx === focusedIndex ? 0 : -1}
-                  onFocus={() => setFocusedIndex(idx)}
-                >
-                  <div className="tvTileTitle">{t.title}</div>
-                  <div className="tvTileSubtitle">{t.subtitle}</div>
-                </button>
-              );
-            })}
-          </div>
-
-          <p className="tvFooterNote">
-            Placeholder only. Connect real EPG/VOD modules later without adding extra libraries.
-          </p>
-        </section>
-      </main>
+      <Routes>
+        <Route path="/" element={Home} />
+        <Route
+          path="/vod"
+          element={
+            <VodPage
+              onBack={() => {
+                navigate('/');
+              }}
+            />
+          }
+        />
+      </Routes>
     </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
+    </BrowserRouter>
   );
 }
 

@@ -11,6 +11,8 @@
 
   --focus: #06b6d4;
   --tile-bg: rgba(0, 0, 0, 0.04);
+
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
 }
 
 [data-theme='dark'] {
@@ -25,6 +27,8 @@
 
   --focus: #06b6d4;
   --tile-bg: rgba(255, 255, 255, 0.06);
+
+  --shadow: 0 18px 40px rgba(0, 0, 0, 0.36);
 }
 
 .App {
@@ -172,9 +176,170 @@
   color: var(--text-secondary);
 }
 
+/* ----------------------------
+   VOD page + carousel styles
+----------------------------- */
+
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 22px 24px 10px;
+}
+
+.pageHeaderLeft {
+  min-width: 0;
+}
+
+.pageTitle {
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.pageSubtitle {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.btnBack {
+  border: 1px solid var(--border-color);
+  background: var(--tile-bg);
+  color: var(--text-primary);
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.btnBack:focus {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.vodMain {
+  padding: 0 24px 28px;
+}
+
+.vodSection {
+  margin-top: 14px;
+}
+
+.vodSectionHeader {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 10px;
+}
+
+.vodSectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+}
+
+.vodSectionHint {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.railWrapper {
+  border-radius: 16px;
+  padding: 10px 0 6px;
+}
+
+.railWrapper:focus {
+  outline: none;
+}
+
+.railWrapper--active {
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.14);
+}
+
+.carousel {
+  overflow: hidden;
+}
+
+.carouselRail {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 220px;
+  gap: 14px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  padding: 4px 2px 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carouselRail::-webkit-scrollbar {
+  height: 10px;
+}
+
+.carouselRail::-webkit-scrollbar-thumb {
+  background: rgba(127, 127, 127, 0.25);
+  border-radius: 999px;
+}
+
+.carouselTile {
+  display: grid;
+  grid-template-rows: 132px auto;
+  text-align: left;
+  border: 1px solid var(--border-color);
+  background: var(--tile-bg);
+  color: inherit;
+  border-radius: 16px;
+  padding: 10px;
+  cursor: pointer;
+  scroll-snap-align: center;
+  transition: transform 120ms ease, border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.carouselTile:focus {
+  outline: none;
+}
+
+.carouselTile--active {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.25), var(--shadow);
+  transform: translateY(-1px);
+}
+
+.carouselPoster {
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.8), rgba(6, 182, 212, 0.35));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.carouselMeta {
+  padding: 10px 2px 2px;
+}
+
+.carouselTitle {
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+.carouselSubtitle {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.2;
+}
+
 /* Small screens fallback (preview/dev) */
 @media (max-width: 900px) {
   .tvGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .carouselRail {
+    grid-auto-columns: 200px;
   }
 }
